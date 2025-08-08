@@ -76,7 +76,7 @@
         <!-- Header Section -->
         <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-center">
             <div class="flex justify-center mb-4">
-                <img src="https://placehold.co/80x80" alt="Company logo with geometric purple and indigo design" class="rounded-full border-4 border-white">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b5ae77d8-5b9b-4f4a-b733-9e04658be5e9.png" alt="Company logo with geometric purple and indigo design" class="rounded-full border-4 border-white">
             </div>
             <h1 class="text-2xl font-bold text-white">Create Your Account</h1>
             <p class="text-indigo-100 mt-2">Join our community today</p>
@@ -91,7 +91,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                         </svg>
-                        <span class="font-medium">Registration successful! Please check your email.</span>
+                        <span class="font-medium">Registration successful!</span>
                     </div>
                 </div>
 
@@ -232,16 +232,45 @@
                     return;
                 }
                 
-                // If all validations pass, show success message
+                // If all validations pass, save data and show success
+                const formData = {
+                    email,
+                    password, // Note: In real apps, never store plain passwords!
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Send data to server
+                fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+                
+                // Show success and reset form
                 document.getElementById('successMessage').classList.remove('hidden');
                 registerForm.reset();
                 
-                // Simulate form submission
                 setTimeout(() => {
                     document.getElementById('successMessage').classList.add('hidden');
                 }, 5000);
             });
         });
+    // Check for existing data on load
+        const savedData = localStorage.getItem('userRegistration');
+        if (savedData) {
+            console.log('Previously saved registration data:', JSON.parse(savedData));
+        }
     </script>
 </body>
 </html>
